@@ -204,6 +204,10 @@ const filteredProducts = products
     navigate('/addproduct');
   };
 
+  const handleBulkAddClick = () => {
+    navigate('/addproduct/bulk');
+  };
+
   const handleRowClick = (productId) => {
     navigate(`/update-product/${productId}`);
   };
@@ -223,6 +227,12 @@ const filteredProducts = products
           <div className='w-full flex justify-end gap-2'>
             <SearchBar query={searchQuery} onQueryChange={setSearchQuery}   placeholderMessage={'Search product by name and product id'}/>
             <button className={`px-4 py-2 rounded-md font-semibold ${darkMode ? 'bg-light-ACCENT' : 'dark:bg-dark-ACCENT'}`} onClick={handleAddProductClick}> Add Product</button>
+            <button
+              className={`px-4 py-2 rounded-md font-semibold ${darkMode ? 'bg-light-ACCENT' : 'dark:bg-dark-ACCENT'}`}
+              onClick={handleBulkAddClick}
+            >
+              Bulk Add
+            </button>
           </div>
         </div>
         <div className='flex gap-4'>

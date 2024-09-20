@@ -26,6 +26,7 @@ import AdminProfile from './pages/AdminProfile';
 import Customer from './pages/dashboardCustomer';
 import ReportPage from './pages/reportPage';
 import { AppProvider } from './context/AppContext';
+import AddProductBulk from './pages/AddProductBulk';
 
 const App = () => {
     const { user } = useAuthContext();
@@ -44,6 +45,7 @@ const App = () => {
               <Route path="/transaction" element={<PrivateRoute requiredRole="cashier"><Transaction /></PrivateRoute>} />
               <Route path="/orders" element={<PrivateRoute requiredRole="cashier"><SalesOrder /></PrivateRoute>} />
               <Route path="/addproduct" element={<PrivateRoute requiredRole="admin"><AddProduct /></PrivateRoute>} />
+              <Route path="/addproduct/bulk" element={<PrivateRoute requiredRole="admin"><AddProductBulk /></PrivateRoute>} />
               <Route path="/update-product/:productId"  element={<PrivateRoute requiredRole="admin"><UpdateProduct /></PrivateRoute>} />
               <Route path="/inventory/supplier" element={<PrivateRoute requiredRole="admin"><Supplier /></PrivateRoute>} />
               <Route path="/add-supplier" element={<PrivateRoute requiredRole="admin"><AddSupplier /></PrivateRoute>} />
