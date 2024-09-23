@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useContext } from "react";
+import { AuthContext } from '../context/AuthContext';
 import { useAdminTheme } from "../context/AdminThemeContext";
 import { IoCaretBackOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +16,7 @@ import {
 } from "../utils/helper";
 import {
   ACCEPTED_FILE_TYPES,
+  API_DOMAIN,
   NUMERAL_HEADERS,
   PRODUCT_CATEGORIES,
   PRODUCT_FIELDS,
@@ -23,6 +25,8 @@ import axios from "axios";
 import ButtonSpinner from "../components/ButtonSpinner";
 
 const AddProductBulk = () => {
+  const { user } = useContext(AuthContext);
+
   const { darkMode } = useAdminTheme();
 
   const navigate = useNavigate();
@@ -38,6 +42,7 @@ const AddProductBulk = () => {
   const [validated, setValidated] = useState(false);
   const [requestBody, setRequestBody] = useState([]);
   const [importing, setImporting] = useState(false);
+  const [finished, setFinished] = useState(false);
 
   const requiredProductFields = useMemo(
     () =>
@@ -217,6 +222,7 @@ const AddProductBulk = () => {
 
     if (!arraysAreEqual(newFields, mappedFields)) {
       setValidated(false);
+      setFinished(false);
     }
 
     setMappedFields(newFields);
@@ -314,17 +320,42 @@ const AddProductBulk = () => {
     setValues([]);
     setValidationError(null);
     setValidated(false);
+    setFinished(false);
   };
 
-  const handleImport = () => {
+  const handleImport = async () => {
     setImporting(true);
-    console.log(requestBody);
+
+    try {
+      await axios.post(`${API_DOMAIN}/product/bulk-add`, requestBody, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      setFinished(true);
+    } catch (error) {
+      setFinished(false);
+      console.log('IMPORT ERROR: ', error);
+    }
+
     setImporting(false);
   };
 
   const getStepButtons = () => {
     if (totalSteps === step) {
-      if (validated) {
+      if (finished) {
+        return (
+          <button
+            type="button"
+            className={`px-6 py-2 rounded-md
+              ${getActiveColoredBgColorDarkMode()}`}
+            onClick={() => navigate("/inventory/product")}
+          >
+            Proceed to Upload Images
+          </button>
+        );
+      } else if (validated) {
         return (
           <button
             type="button"
@@ -385,12 +416,12 @@ const AddProductBulk = () => {
       <div className="w-full h-[82%] flex flex-col items-center justify-center gap-2">
         <p className="text-3xl">Bulk Add</p>
         <div
-          className={`w-[40%] h-full rounded-md p-4 ${
+          className={`w-[60%] h-full flex flex-col rounded-md p-4 ${
             darkMode ? "bg-light-CARD" : "bg-dark-CARD"
           }`}
         >
           <Stepper step={step} />
-          <div className="flex flex-col w-full gap-4 justify-between">
+          <div className="flex flex-col w-full justify-between">
             <div>
               {step === 1 && (
                 <AddProductBulkUpload

@@ -206,7 +206,7 @@ const PosHome = () => {
               <ProductCard
                 key={product._id}
                 product={{
-                  image: `${baseURL}/images/${product.image.substring(14)}`,
+                  image: `${baseURL}/images/${product.image?.substring(14)}`,
                   name: product.name,
                   price: parseFloat(product.selling_price) || 0,
                   stock: product.quantity_in_stock,
@@ -237,7 +237,7 @@ const PosHome = () => {
                   <tr key={idx} className='border-b border-dark-ACCENT gap-2 text-xs'>
                     <td className='flex gap-2 items-center justify-center p-2'>
                       <img
-                        src={`${baseURL}/images/${item.product.image.substring(14)}`}
+                        src={`${baseURL}/images/${item.product.image?.substring(14)}`}
                         className='w-16 h-16 object-cover rounded-lg'
                       />
                       <p className='w-full'>{item.product.name}</p>

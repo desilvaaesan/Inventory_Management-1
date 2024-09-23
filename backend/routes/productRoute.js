@@ -106,6 +106,42 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Bulk add products
+router.post('/bulk-add', async (req, res) => {
+  try {
+    const newProducts = req.body;
+
+    const withProductId = await Promise.all(newProducts.map(async product => {
+      product.product_id = await Product.generateProductId();
+
+      let supplier = null;
+      if (product.supplierId && product.supplierId !== 'NONE') {
+        if (!mongoose.Types.ObjectId.isValid(product.supplierId)) {
+          return res.status(400).json({ message: 'Invalid supplier ID' });
+        }
+        supplier = await Supplier.findById(product.supplierId);
+        if (!supplier) {
+          return res.status(404).json({ message: 'Supplier not found' });
+        }
+      }
+
+      product.supplier = supplier._id;
+      return product;
+    }));
+
+    const addedProducts = await Product.insertMany(withProductId);
+
+    addedProducts.forEach(product => {
+      req.app.get('io').emit('product-added', product);
+    });
+
+    return res.status(201).send({ message: 'Products created successfully' });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('Server Error');
+  }
+});
+
 
 // Bulk update products
 router.put('/bulk-update', async (req, res) => {

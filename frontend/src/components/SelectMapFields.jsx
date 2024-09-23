@@ -9,7 +9,7 @@ const SelectMapFields = (props) => {
   return (
     <div>
       <select
-        className={`w-full border bg-transparent rounded-md p-2 ${
+        className={`w-full border bg-transparent rounded-md p-2 cursor-pointer ${
           darkMode ? "border-light-ACCENT" : "border-dark-ACCENT"
         }`}
         onChange={(e) => {
