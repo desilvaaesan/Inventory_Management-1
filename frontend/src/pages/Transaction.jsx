@@ -218,7 +218,7 @@ const Transaction = () => {
                     <tr key={idx} className='border-b border-dark-ACCENT gap-2'>
                       <td className='px-4 py-1 flex gap-4 items-center justify-start'>
                         <img
-                          src={`${baseURL}/images/${item.product.image.substring(14)}`}
+                          src={`${baseURL}/images/${item.product.image?.substring(14)}`}
                           className='w-16 h-16 object-cover rounded-lg'
                         />
                         <p className='text-sm w-full'>{item.product.name}</p>

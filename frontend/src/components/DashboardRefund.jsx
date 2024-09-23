@@ -143,7 +143,7 @@ const DashboardRefund = ({
                                             <tr key={idx} className='border-b border-gray-400'>
                                                 <td className="p-2 flex gap-2">
                                                     <img
-                                                        src={`${baseURL}/images/${item.product.image.substring(14)}`}
+                                                        src={`${baseURL}/images/${item.product.image?.substring(14)}`}
                                                         alt={item.product.name}
                                                         className="w-12 h-12 object-cover rounded-lg"
                                                     />

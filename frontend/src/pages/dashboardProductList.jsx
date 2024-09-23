@@ -204,6 +204,10 @@ const filteredProducts = products
     navigate('/addproduct');
   };
 
+  const handleBulkAddClick = () => {
+    navigate('/addproduct/bulk');
+  };
+
   const handleRowClick = (productId) => {
     navigate(`/update-product/${productId}`);
   };
@@ -223,6 +227,12 @@ const filteredProducts = products
           <div className='w-full flex justify-end gap-2'>
             <SearchBar query={searchQuery} onQueryChange={setSearchQuery} placeholderMessage={'Search products by name and product id'}/>
             <button className={`px-4 py-2 rounded-md font-semibold ${darkMode ? 'bg-light-ACCENT' : 'dark:bg-dark-ACCENT'}`} onClick={handleAddProductClick}> Add Product</button>
+            <button
+              className={`px-4 py-2 rounded-md font-semibold ${darkMode ? 'bg-light-ACCENT' : 'dark:bg-dark-ACCENT'}`}
+              onClick={handleBulkAddClick}
+            >
+              Bulk Add
+            </button>
           </div>
         </div>
         <div className='flex gap-4'>
@@ -353,7 +363,7 @@ const filteredProducts = products
                          transform hover:scale-100 hover:translate-x-2 transition-transform transition-shadow`}
           >
             <td className='flex items-center justify-left p-2'>
-              <img src={`${baseURL}/images/${product.image.substring(14)}`} alt={product.name} className='w-12 h-12 object-cover mr-[10px]' />
+              <img src={`${baseURL}/images/${product.image?.substring(14)}`} alt={product.name} className='w-12 h-12 object-cover mr-[10px]' />
               <p className='text-sm'>{product.name}</p>
             </td>
             <td className='text-center text-sm'>{product.category}</td>
