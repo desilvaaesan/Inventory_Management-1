@@ -30,13 +30,14 @@ const generateTransactionId = async () => {
 };
 
 // routes/transactionRoutes.js
+// routes/transactionRoutes.js
 router.post('/', async (req, res) => {
   try {
-    const { products, customer, total_price, transaction_date, total_amount_paid, source, cashier } = req.body;
+    const { products, customer, total_price, transaction_date, total_amount_paid, payment_status, cashier } = req.body;
 
     // Validate required fields
-    if (!products || !customer || !total_price || !transaction_date) {
-      return res.status(400).json({ message: 'Products, customer, total_price, transaction_date, and cashier are required' });
+    if (!products || !customer || !total_price || !transaction_date || payment_status === undefined) {
+      return res.status(400).json({ message: 'Products, customer, total_price, transaction_date, and payment_status are required' });
     }
 
     // Process products
@@ -66,9 +67,6 @@ router.post('/', async (req, res) => {
     // Generate transaction ID
     const transaction_id = await generateTransactionId();
 
-    // Determine payment status
-    const payment_status = source === 'pos' ? 'paid' : 'unpaid';
-
     // Calculate due_date (10 days after transaction_date)
     const dueDate = new Date(transaction_date);
     dueDate.setDate(dueDate.getDate() + 10);
@@ -82,7 +80,7 @@ router.post('/', async (req, res) => {
       total_amount_paid,
       transaction_date,
       due_date: dueDate, // Automatically set due_date
-      payment_status,
+      payment_status, // Use the payment_status from the request body
       cashier
     });
 
@@ -96,6 +94,7 @@ router.post('/', async (req, res) => {
 });
 
 
+
 // Get All Transactions
 router.get('/', async (req, res) => {
   try {
@@ -105,6 +104,7 @@ router.get('/', async (req, res) => {
     if (req.query.payment_status) {
       query.payment_status = req.query.payment_status;
     }
+    
 
     if (req.query.transaction_id) {
       query.transaction_id = { $regex: req.query.transaction_id, $options: 'i' }; // Partial match for transaction_id
